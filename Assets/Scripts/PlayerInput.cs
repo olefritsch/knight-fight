@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
 
 [RequireComponent(typeof(MovementController))]
+[RequireComponent(typeof(CombatController))]
 public class PlayerInput : MonoBehaviour
 {
     private MovementController m_Movement;
+    private CombatController m_Combat;
 
     private float m_Horizontal;
     private float m_Vertical;
@@ -14,6 +16,7 @@ public class PlayerInput : MonoBehaviour
 	void Start ()
     {
         m_Movement = GetComponent<MovementController>();
+        m_Combat = GetComponent<CombatController>();
 	}
 	
 	void Update ()
@@ -23,6 +26,12 @@ public class PlayerInput : MonoBehaviour
 
         if (!m_IsJumping)
             m_IsJumping = Input.GetButtonDown("Jump");
+
+        if (Input.GetButtonDown("Fire1"))
+            m_Combat.ThrowWeapon();
+
+        if (Input.GetButtonDown("Fire2"))
+            m_Combat.ThrowWeapon();
     }
 
     void FixedUpdate()
