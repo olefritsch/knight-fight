@@ -48,6 +48,9 @@ public class MovementController : MonoBehaviour
 
     public void Move(float hMovement, float vMovement, bool jump)
     {
+        if (!enabled)
+            return;
+
         CheckGroundStatus();
 
         if (m_IsGrounded)

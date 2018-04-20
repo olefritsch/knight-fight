@@ -1,11 +1,20 @@
 ﻿using UnityEngine;
 
+[RequireComponent(typeof(MovementController))]
 public class CombatController : MonoBehaviour
 {
     // Serializeable Member Variables
     [SerializeField] float m_ThrowForce;
-	[SerializeField] GameObject m_Weapon;
-	[SerializeField] Transform m_WeaponHand;
+    [SerializeField] GameObject m_Weapon;
+    [SerializeField] Transform m_WeaponHand;
+
+    private MovementController m_Movement;
+    private IInteractable m_Interacting;
+
+    void Start()
+    {
+        m_Movement = GetComponent<MovementController>();
+    }
 
 	void OnCollisionEnter(Collision collision)
 	{
@@ -21,8 +30,13 @@ public class CombatController : MonoBehaviour
 		}
 	}
 
-    public void Attack() 
+	public void Attack() 
     {
+        if (m_Interacting != null)
+        {
+            m_Interacting.Use();
+        }
+
         // TODO: Implement Animations
     }
 
@@ -43,6 +57,36 @@ public class CombatController : MonoBehaviour
 
             m_Weapon.transform.parent = null;
             m_Weapon = null;
+        }
+    }
+
+    public void Interact()
+    {
+        if (m_Interacting != null) 
+        {
+            m_Interacting.StopInteracting();
+            m_Interacting = null;
+
+            m_Movement.enabled = true;
+        }
+        else 
+        {
+            int interactableLayer = 1 << LayerMask.NameToLayer(Layers.Interactable);
+            RaycastHit hitInfo;
+
+            // 0.1f is a small offset to start the ray from inside the character
+            // it is also good to note that the transform position in the sample assets is at the base of the character
+            if (Physics.BoxCast(transform.position + Vector3.up, new Vector3(0.4f, 0.8f, 0.5f), transform.right, out hitInfo, Quaternion.identity, 0.4f, interactableLayer))
+            {
+                IInteractable interactable = hitInfo.transform.root.GetComponent<IInteractable>();
+                if (!interactable.IsUsed)
+                {
+                    m_Interacting = interactable;
+                    m_Interacting.Interact();
+
+                    m_Movement.enabled = false;
+                }
+            }
         }
     }
 }

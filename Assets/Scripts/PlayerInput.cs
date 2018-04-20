@@ -13,6 +13,7 @@ public class PlayerInput : MonoBehaviour
         public const string Attack = "Attack";
         public const string Defend = "Defend";
         public const string Throw = "Throw";
+        public const string Interact = "Interact";
     }
 
     private MovementController m_Movement;
@@ -39,10 +40,13 @@ public class PlayerInput : MonoBehaviour
             m_IsJumping = Input.GetButtonDown(InputCommands.Jump);
 
         if (Input.GetButtonDown(InputCommands.Attack))
-            m_Combat.ThrowWeapon();
+            m_Combat.Attack();
 
         if (Input.GetButtonDown(InputCommands.Throw))
             m_Combat.ThrowWeapon();
+
+        if (Input.GetButtonDown(InputCommands.Interact))
+            m_Combat.Interact();
     }
 
     void FixedUpdate()
