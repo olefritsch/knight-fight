@@ -4,6 +4,17 @@
 [RequireComponent(typeof(CombatController))]
 public class PlayerInput : MonoBehaviour
 {
+    // Collection of Inputs to simplify string references
+    public struct InputCommands
+    {
+        public const string HorizontalMovement = "Horizontal";
+        public const string VerticalMovement = "Vertical";
+        public const string Jump = "Jump";
+        public const string Attack = "Attack";
+        public const string Defend = "Defend";
+        public const string Throw = "Throw";
+    }
+
     private MovementController m_Movement;
     private CombatController m_Combat;
 
@@ -21,16 +32,16 @@ public class PlayerInput : MonoBehaviour
 	
 	void Update ()
     {
-        m_Horizontal = Input.GetAxis("Horizontal");
-        m_Vertical = Input.GetAxis("Vertical");
+        m_Horizontal = Input.GetAxis(InputCommands.HorizontalMovement);
+        m_Vertical = Input.GetAxis(InputCommands.VerticalMovement);
 
         if (!m_IsJumping)
-            m_IsJumping = Input.GetButtonDown("Jump");
+            m_IsJumping = Input.GetButtonDown(InputCommands.Jump);
 
-        if (Input.GetButtonDown("Fire1"))
+        if (Input.GetButtonDown(InputCommands.Attack))
             m_Combat.ThrowWeapon();
 
-        if (Input.GetButtonDown("Fire2"))
+        if (Input.GetButtonDown(InputCommands.Throw))
             m_Combat.ThrowWeapon();
     }
 
@@ -40,3 +51,4 @@ public class PlayerInput : MonoBehaviour
         m_IsJumping = false;
     }
 }
+
